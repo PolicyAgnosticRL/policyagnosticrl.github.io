@@ -10,10 +10,16 @@ body {
 .section {
 	@apply max-w-screen-lg mx-auto text-center px-4 lg:px-0 py-8;
 }
+.section-title {
+	@apply text-2xl font-bold mb-4 text-left;
+}
 
 p {
-	font-size: 1.1rem;
-	@apply text-left;
+	@apply text-base text-left;
+}
+
+.math-equation {
+	@apply font-mono bg-gray-100 p-2 text-base rounded mb-4 inline-block;
 }
 
 .color-gradient {
@@ -57,15 +63,28 @@ p {
 }
 
 .footnote::after {
-	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-base w-80;
+	@apply absolute bottom-full left-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-base w-80;
 	content: attr(data-footnote);
 	white-space: normal;
 	word-wrap: break-word;
 	background-color: rgb(249, 245, 240);
+
+	/* Use CSS variables for dynamic positioning */
+	transform: translateX(var(--tooltip-transform, -50%));
+	left: var(--tooltip-left, 50%);
+	right: var(--tooltip-right, auto);
 }
 
 .footnote:hover::after,
 .footnote:focus::after,
 .footnote:active::after {
 	@apply opacity-100 visible;
+}
+
+.video-caption {
+	@apply mt-2 text-white font-medium;
+}
+
+.separator {
+	@apply border-t border-gray-300 my-4 flex max-w-screen-lg mx-auto;
 }

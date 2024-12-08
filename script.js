@@ -81,3 +81,50 @@ tabButtons.forEach((tabButton) => {
 		targetContent.classList.remove("hidden");
 	});
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+	const footnotes = document.querySelectorAll(".footnote");
+
+	footnotes.forEach((footnote) => {
+		footnote.addEventListener("mouseenter", (event) => {
+			const tooltip = event.target.querySelector("::after");
+			positionTooltip(event.target, tooltip);
+		});
+	});
+
+	function positionTooltip(trigger, tooltip) {
+		// Remove any previous positioning
+		trigger.style.removeProperty("--tooltip-transform");
+		trigger.style.removeProperty("--tooltip-left");
+
+		// Get trigger and viewport dimensions
+		const triggerRect = trigger.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+
+		// Calculate tooltip width and position
+		const tooltipWidth = 320; // Based on w-80 in Tailwind (which is 20rem or 320px)
+		const tooltipLeft =
+			triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
+
+		// Check left overflow
+		if (tooltipLeft < 10) {
+			trigger.style.setProperty(
+				"--tooltip-transform",
+				"translateX(calc(50% - " + (tooltipLeft - 10) + "px))",
+			);
+			trigger.style.setProperty("--tooltip-left", "10px");
+		}
+
+		// Check right overflow
+		const rightEdge = tooltipLeft + tooltipWidth;
+		if (rightEdge > viewportWidth - 10) {
+			const overflowAmount = rightEdge - (viewportWidth - 10);
+			trigger.style.setProperty(
+				"--tooltip-transform",
+				"translateX(calc(50% - " + overflowAmount + "px))",
+			);
+			trigger.style.setProperty("--tooltip-left", "auto");
+			trigger.style.setProperty("--tooltip-right", "10px");
+		}
+	}
+});
