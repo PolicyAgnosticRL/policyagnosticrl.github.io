@@ -980,7 +980,9 @@ p {
   background-color: rgb(249, 245, 240);
 }
 
-.footnote:hover::after {
+.footnote:hover::after,
+.footnote:focus::after,
+.footnote:active::after {
   visibility: visible;
   opacity: 1;
 }
