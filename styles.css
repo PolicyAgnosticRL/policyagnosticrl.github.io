@@ -8,19 +8,12 @@ body {
 }
 
 .section {
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	@apply max-w-screen-lg mx-auto text-center px-4 lg:px-0 py-8;
 }
 
 p {
 	font-size: 1.1rem;
 	@apply text-left;
-}
-
-div.fp-watermark {
-	display: none;
 }
 
 .color-gradient {
@@ -64,7 +57,7 @@ div.fp-watermark {
 }
 
 .footnote::after {
-	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-md w-64;
+	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-base max-w-xl;
 	content: attr(data-footnote);
 	white-space: normal;
 	word-wrap: break-word;

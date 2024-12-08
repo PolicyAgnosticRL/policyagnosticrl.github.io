@@ -781,10 +781,6 @@ video {
   padding-top: 0px;
 }
 
-.pt-4 {
-  padding-top: 1rem;
-}
-
 .pt-8 {
   padding-top: 2rem;
 }
@@ -897,19 +893,26 @@ body {
 }
 
 .section {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1024px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
 
 p {
   font-size: 1.1rem;
   text-align: left;
-}
-
-div.fp-watermark {
-  display: none;
 }
 
 .color-gradient {
@@ -955,7 +958,7 @@ div.fp-watermark {
   bottom: 100%;
   left: 50%;
   z-index: 10;
-  width: 16rem;
+  max-width: 36rem;
   --tw-translate-x: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   border-radius: 0.375rem;
@@ -963,8 +966,8 @@ div.fp-watermark {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   padding: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity, 1));
   opacity: 0;
