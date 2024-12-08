@@ -52,15 +52,25 @@ div.fp-watermark {
 	-webkit-text-fill-color: transparent;
 }
 
-/* .intro h2 { */
-/* 	font-size: 1em; /\* Make the subtitle smaller *\/ */
-/* } */
+.wide-hyphen {
+	display: inline-block;
+	transform: scaleX(2); /* Makes it wider */
+	margin: 0 0.2em;
+}
 
-/* .intro p { */
-/* 	font-size: 0.6em; /\* Make the author text smaller *\/ */
-/* } */
+.footnote {
+	@apply relative text-xs text-blue-500 cursor-help underline;
+	top: -0.5rem;
+}
 
-/* .figure { */
-/* 	max-width: 80%; */
-/* 	height: auto; */
-/* } */
+.footnote::after {
+	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-md w-64;
+	content: attr(data-footnote);
+	white-space: normal;
+	word-wrap: break-word;
+	background-color: rgb(249, 245, 240);
+}
+
+.footnote:hover::after {
+	@apply opacity-100 visible;
+}

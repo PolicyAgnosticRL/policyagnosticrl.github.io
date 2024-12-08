@@ -75,35 +75,44 @@
 			<div class="max-w-screen-lg mx-auto text-center px-4">
 				<h3 class="text-3xl md:text-4xl font-bold mb-6">TL;DR</h3>
 				<p class="text-lg md:text-xl text-gray-700 mb-6">
-					We introduce Policy-Agnostic RL (PA-RL), a single method that
+					We introduce Policy-Agnostic RL (<b>PA-RL</b>), a single method that
 					fine-tunes multiple policy classes, with varying architectures and
-					sizes. It enables sample-efficient improvement of diffusion and
-					transformer-based auto-regressive policies. The core of the method is
-					a universal policy improvement step that decomposes improvement into
-					two steps: obtaining "optimized" actions, and then distilling these
-					optimized actions back into the base policy. PA-RL sets a new state of
-					the art for offline to online RL, and it makes it possible to improve
-					OpenVLA, a 7B-parameter generalist robot policy, in the real world
-					without further demonstrations.
+					sizes. It enables sample-efficient improvement of <b>diffusion</b> and
+					<b>transformer-based autoregressive policies</b>. The core of the
+					method is a universal policy improvement step that decomposes
+					improvement into two steps: obtaining "optimized" actions, and then
+					distilling these optimized actions back into the base policy. PA-RL
+					sets a new state of the art for offline to online RL, and it
+					<b
+						>makes it possible, for the first time, to improve
+						<a
+							href="https://openvla.github.io/"
+							target="_blank"
+							class="text-blue-500"
+							>OpenVLA</a
+						>, a 7B-parameter generalist robot policy, in the real world, and
+						without further demonstrations</b
+					>.
 				</p>
 			</div>
 		</div>
 		<div class="section flex max-w-screen-lg mx-auto overflow-visible pt-8">
 			<div class="motivation_rl">
 				<h2 class="text-2xl md:text-3xl font-bold mb-4 text-left">
-					Motivation - why RL?
+					Motivation <span class="wide-hyphen">-</span> why RL?
 				</h2>
 				<p>
-					The best performing models for robotics tasks - large pre-trained
-					transformers, diffusion policies - still perform poorly on new tasks
-					or slightly unseen conditions. <b>Sample-efficient RL</b> is a recipe
-					for improving a policy’s performance cheaply and fast.
+					The best performing models for robotics tasks
+					<span class="wide-hyphen">-</span> large pre-trained transformers,
+					diffusion policies <span class="wide-hyphen">-</span> still perform
+					poorly on new tasks or slightly unseen conditions.
+					<b>Sample-efficient RL</b> is a recipe for improving a policy’s
+					performance cheaply and fast.
 				</p>
 				<p>
 					The <b>Actor-Critic RL</b> architecture yields fast improvement, but
-					has only been used so far with small, gaussian policies. Can we get
-					the best of both worlds, and improve
-					<i>large pre-trained transformers</i> or
+					has only been used with small, gaussian policies. Can we get the best
+					of both worlds, and improve <i>large pre-trained transformers</i> or
 					<i>diffusion policies</i> through interaction?
 				</p>
 			</div>
@@ -113,7 +122,20 @@
 				<h2 class="text-2xl md:text-3xl font-bold mb-4">
 					What is the challenge?
 				</h2>
-				<p class="">The Critic objective will generally look something like:</p>
+
+				<p>
+					<b
+						>The best-performing policy classes are hard to train with
+						Actor-Critic RL!</b
+					>
+				</p>
+
+				<p>
+					To see why, let's consider what happens when we switch the gaussian
+					policies normally used in Actor-Critic RL with either a Diffusion
+					Policy or an autoregressive categorical policy like OpenVLA. The
+					Critic objective will generally look something like this:
+				</p>
 				<div class="overflow-x-auto flex justify-center pt-8">
 					<p
 						class="font-mono bg-gray-100 p-2 text-base rounded mb-4 inline-block"
@@ -124,12 +146,13 @@
 					</p>
 				</div>
 				<p class="text-base md:text-lg mb-4">
-					To optimize this objective, we only need to sample from the policy.
-					For any reasonable \( \color{red} \pi_\phi \), we are going to be able
-					to efficiently sample, and therefore train the Critic.
+					To optimize this objective, we only need to sample from the policy \(
+					\color{red} \pi_\phi \). Even for policies that are very large,
+					non-differentiable, or have different sampling mechanisms like
+					diffusion policies, we will be able to fit a critic.
 				</p>
 				<p class="text-base md:text-lg mb-4">
-					The Policy objective will look like:
+					The Policy objective will look like this:
 				</p>
 				<div class="overflow-x-auto flex justify-center pt-8">
 					<p
@@ -141,9 +164,13 @@
 				</div>
 				<p class="text-base md:text-lg mb-4">
 					Directly optimizing this requires computing \(\nabla_\phi
-					\textcolor{red}{\pi_\phi(s)}\), or how the policy outputs change as we
-					vary the inputs. This quantity is undefined for auto-regressive
-					transformers, because their outputs are discrete.
+					\textcolor{red}{\pi_\phi(s)}\). This quantity is undefined for
+					autoregressive categorical policies like OpenVLA, because their
+					outputs are discrete<span
+						class="footnote"
+						data-footnote="If this makes policy improvement hard, then how is autoregressive training posible to begin with? The key difference is that the cross-entropy loss is applied before the de-discretization, whereas the Actor Critic loss is applied to the continuous actions. That is why supervised learning does not have a non-differentiability problem, but Actor-Critic does."
+						>[1]</span
+					>.
 				</p>
 				<div class="flex justify-center my-4">
 					<video
@@ -161,9 +188,14 @@
 					</video>
 				</div>
 				<p class="text-base md:text-lg mb-4">
-					Further, calculating it for diffusion policies requires
-					back-propagating through the denoising chain, which is a slow and
-					unstable process.
+					Diffusion policies, on the other hand, are fully differentiable.
+					However, back-propagating \(\nabla_\phi \textcolor{red}{\pi_\phi(s)}\)
+					through the denoising chain is slow and unstable, because it is a very
+					deep computation graph<span
+						class="footnote"
+						data-footnote="Why does this not happen when training Diffusion Policies with supervised learning? The Diffusion loss that is used for supervised learning never back-propagates through the denoising chain! Each denoising step has direct supervision."
+						>[2]</span
+					>.
 				</p>
 				<div class="flex justify-center my-4">
 					<video
@@ -187,7 +219,9 @@
 			</div>
 		</div>
 		<!-- Separator  -->
-		<div class="border-t border-gray-300 my-4"></div>
+		<div
+			class="border-t border-gray-300 my-4 flex max-w-screen-lg mx-auto"
+		></div>
 		<div class="section flex max-w-screen-lg mx-auto overflow-visible pt-4">
 			<div class="method text-left">
 				<h2 class="text-2xl md:text-3xl font-bold mb-4">Method</h2>
@@ -220,7 +254,9 @@
 			</div>
 		</div>
 		<!-- Separator  -->
-		<div class="border-t border-gray-300 my-4"></div>
+		<div
+			class="border-t border-gray-300 my-4 flex max-w-screen-lg mx-auto"
+		></div>
 		<div class="section flex max-w-screen-lg mx-auto overflow-visible pt-4">
 			<div class="results text-left">
 				<h2 class="text-2xl md:text-3xl font-bold mb-4">Results</h2>
