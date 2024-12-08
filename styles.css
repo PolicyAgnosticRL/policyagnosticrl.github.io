@@ -57,7 +57,7 @@ p {
 }
 
 .footnote::after {
-	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-base max-w-xl;
+	@apply absolute bottom-full left-1/2 -translate-x-1/2 text-gray-800 p-2 border border-gray-300 rounded-md z-10 opacity-0 invisible transition-opacity text-base w-80;
 	content: attr(data-footnote);
 	white-space: normal;
 	word-wrap: break-word;
