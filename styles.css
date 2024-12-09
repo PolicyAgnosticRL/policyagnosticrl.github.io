@@ -92,3 +92,8 @@ a {
 .separator {
 	@apply border-t border-gray-300 my-4 flex max-w-screen-lg mx-auto;
 }
+
+sub,
+sup {
+	font-size: 70%;
+}
