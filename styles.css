@@ -18,6 +18,10 @@ p {
 	@apply text-base text-left;
 }
 
+a {
+	@apply text-blue-500;
+}
+
 .math-equation {
 	@apply font-mono bg-gray-100 p-2 text-base rounded mb-4 inline-block;
 }
